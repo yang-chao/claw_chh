@@ -25,8 +25,11 @@ class DBHelper:
         cursor = self.__db__.cursor()
 
         # SQL 插入语句
-        sql = 'insert into news (title, link, time, type, author, message_count) values(%s,%s,%s,%s,%s,%s)'
+        sql = 'insert into %s (title, link, time, type, author, message_count) values(%%s,%%s,%%s,%%s,%%s,%%s)' % table
+        # sql = 'insert into news (title, link, time, type, author, message_count) values({0},{1},{2},{3},{4},{5})'\
+        #     .format(table, title, link, time, category, author, message_count)
         args = (title, link, time, category, author, message_count)
+
         # print(sql)
 
         try:

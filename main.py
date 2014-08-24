@@ -4,6 +4,7 @@ __author__ = 'yangchao'
 import urllib2
 from bs4 import BeautifulSoup
 from db_operation import DBHelper
+import re
 
 
 def main():
@@ -12,20 +13,30 @@ def main():
     response = urllib2.urlopen(urlreq)
 
     soup = BeautifulSoup(response)
-    all_content = soup.find_all(attrs={"class": "s xst"})
+    all_thread = soup.findAll(id=re.compile('^normalthread'))
 
     # 数据库
     db_helper = DBHelper()
 
-    for content in all_content:
-        title = content.text
-        link = content.get('href')
+    for thread in all_thread:
+        content = thread.find(attrs={"class": "new"})
+        category = content.em.a.string
+        title_tag = content.find('a', {'class': 's xst'})
+        title = title_tag.string
+        link = title_tag.get('href')
+        by_td = thread.find(attrs={'class': 'by'})
+        author = by_td.cite.a.string
+        time = by_td.em.span.string
+        message_count = thread.find(attrs={'class': 'num'}).a.string
 
-        db_helper.insert('news', title, link, '2014-8-22', '通讯科技', 'M1k1ng', 3)
+        # print(category)
+        # print(title)
+        # print(link)
+        # print(author)
+        # print(time)
+        # print(message_count)
 
-        # print(content)
-        # print(content.text)
-        # print(content.get('href'))
+        db_helper.insert('news', title, link, time, category, author, message_count)
 
     db_helper.close()
 
