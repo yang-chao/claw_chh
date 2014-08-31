@@ -55,3 +55,4 @@ target/
 # Special
 chh_api.iml
 workspace.xml
+.idea/vcs.xml
