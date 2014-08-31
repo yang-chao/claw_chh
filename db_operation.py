@@ -41,3 +41,19 @@ class DBHelper:
             self.__db__.rollback()
         finally:
             cursor.close()
+
+    def delete(self, table):
+        cursor = self.__db__.cursor()
+        sql = 'delete from %s'
+
+        try:
+            # 执行sql语句
+            cursor.execute(sql, sql)
+
+            # 提交到数据库执行
+            self.__db__.commit()
+        except MySQLdb.IntegrityError:
+            # Rollback in case there is any error
+            self.__db__.rollback()
+        finally:
+            cursor.close()
